@@ -183,13 +183,13 @@ class Settings(BaseSettings):
 
     # S3 Storage Configuration
     s3_bucket_name: str | None = None
-    """S3 bucket name for file storage. If not set, uses S3_BUCKET_NAME env var or defaults to 'langflow'."""
+    """S3 bucket name for file storage. If not set, uses LANGFLOW_S3_BUCKET_NAME env var or defaults to 'langflow'."""
     s3_region_name: str | None = None
-    """AWS region for S3 operations. If not set, uses AWS_DEFAULT_REGION env var or default region."""
+    """AWS region for S3 operations. If not set, uses LANGFLOW_S3_REGION_NAME env var or default region."""
     s3_aws_access_key_id: str | None = None
-    """AWS access key ID for S3 operations. If not set, uses AWS_ACCESS_KEY_ID env var or IAM roles."""
+    """AWS access key ID for S3 operations. If not set, uses LANGFLOW_AWS_ACCESS_KEY_ID env var or IAM roles."""
     s3_aws_secret_access_key: str | None = None
-    """AWS secret access key for S3 operations. If not set, uses AWS_SECRET_ACCESS_KEY env var or IAM roles."""
+    """AWS secret access key for S3 operations. If not set, uses LANGFLOW_S3_AWS_SECRET_ACCESS_KEY env var or IAM roles."""  # noqa: E501
 
     celery_enabled: bool = False
 

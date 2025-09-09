@@ -1,3 +1,5 @@
+import os
+
 import boto3
 from botocore.exceptions import ClientError, NoCredentialsError
 from lfx.log.logger import logger
@@ -13,10 +15,14 @@ class S3StorageService(StorageService):
         """Initialize the S3 storage service with session and settings services."""
         super().__init__(session_service, settings_service)
         # Get S3 configuration from settings
-        self.bucket = DEFAULT_S3_BUCKET_NAME
-        s3_region = DEFAULT_S3_REGION_NAME
-        s3_access_key = getattr(settings_service.settings, "s3_aws_access_key_id", None)
-        s3_secret_key = getattr(settings_service.settings, "s3_aws_secret_access_key", None)
+        self.bucket = getattr(settings_service.settings, "s3_bucket_name", DEFAULT_S3_BUCKET_NAME)
+        s3_region = getattr(settings_service.settings, "s3_region_name", DEFAULT_S3_REGION_NAME)
+        s3_access_key = getattr(
+            settings_service.settings, "s3_aws_access_key_id", os.getenv("LANGFLOW_S3_AWS_ACCESS_KEY_ID")
+        )
+        s3_secret_key = getattr(
+            settings_service.settings, "s3_aws_secret_access_key", os.getenv("LANGFLOW_S3_AWS_SECRET_ACCESS_KEY")
+        )
 
         # Configure S3 client with explicit credentials if available
         client_kwargs = {"region_name": s3_region}

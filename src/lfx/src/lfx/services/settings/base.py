@@ -179,7 +179,7 @@ class Settings(BaseSettings):
     download_webhook_url: str | None = "https://api.langflow.store/flows/trigger/ec611a61-8460-4438-b187-a4f65e5559d4"
     like_webhook_url: str | None = "https://api.langflow.store/flows/trigger/64275852-ec00-45c1-984e-3bff814732da"
 
-    storage_type: str = "s3"
+    storage_type: str = "local"
 
     # S3 Storage Configuration
     s3_bucket_name: str | None = None

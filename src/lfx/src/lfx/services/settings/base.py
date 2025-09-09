@@ -179,7 +179,17 @@ class Settings(BaseSettings):
     download_webhook_url: str | None = "https://api.langflow.store/flows/trigger/ec611a61-8460-4438-b187-a4f65e5559d4"
     like_webhook_url: str | None = "https://api.langflow.store/flows/trigger/64275852-ec00-45c1-984e-3bff814732da"
 
-    storage_type: str = "local"
+    storage_type: str = "s3"
+
+    # S3 Storage Configuration
+    s3_bucket_name: str | None = None
+    """S3 bucket name for file storage. If not set, uses S3_BUCKET_NAME env var or defaults to 'langflow'."""
+    s3_region_name: str | None = None
+    """AWS region for S3 operations. If not set, uses AWS_DEFAULT_REGION env var or default region."""
+    s3_aws_access_key_id: str | None = None
+    """AWS access key ID for S3 operations. If not set, uses AWS_ACCESS_KEY_ID env var or IAM roles."""
+    s3_aws_secret_access_key: str | None = None
+    """AWS secret access key for S3 operations. If not set, uses AWS_SECRET_ACCESS_KEY env var or IAM roles."""
 
     celery_enabled: bool = False
 

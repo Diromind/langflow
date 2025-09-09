@@ -95,7 +95,7 @@ async def handle_list_resources(project_id=None):
             for flow in flows:
                 if flow.id:
                     try:
-                        files = await storage_service.list_files(flow_id=str(flow.id))
+                        files = await storage_service.list_files(identifier=str(flow.id))
                         for file_name in files:
                             # URL encode the filename
                             safe_filename = quote(file_name)
@@ -139,7 +139,7 @@ async def handle_read_resource(uri: str) -> bytes:
         storage_service = get_storage_service()
 
         # Read the file content
-        content = await storage_service.get_file(flow_id=flow_id, file_name=filename)
+        content = await storage_service.get_file(identifier=flow_id, file_name=filename)
         if not content:
             msg = f"File {filename} not found in flow {flow_id}"
             raise ValueError(msg)

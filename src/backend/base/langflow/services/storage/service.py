@@ -22,30 +22,40 @@ class StorageService(Service):
         self.data_dir: anyio.Path = anyio.Path(settings_service.settings.config_dir)
         self.set_ready()
 
-    def build_full_path(self, flow_id: str, file_name: str) -> str:
+    def build_full_path(self, identifier: str, file_name: str) -> str:
+        """Build the full path of a file."""
+        return self._build_path(identifier, file_name)
+
+    def _build_path(self, identifier: str, file_name: str) -> str:
+        """Internal method to build path - to be implemented by subclasses."""
         raise NotImplementedError
 
     def set_ready(self) -> None:
         self.ready = True
 
     @abstractmethod
-    async def save_file(self, flow_id: str, file_name: str, data) -> None:
+    async def save_file(self, identifier: str, file_name: str, data: bytes) -> None:
+        """Save a file."""
         raise NotImplementedError
 
     @abstractmethod
-    async def get_file(self, flow_id: str, file_name: str) -> bytes:
+    async def get_file(self, identifier: str, file_name: str) -> bytes:
+        """Get a file."""
         raise NotImplementedError
 
     @abstractmethod
-    async def list_files(self, flow_id: str) -> list[str]:
+    async def list_files(self, identifier: str) -> list[str]:
+        """List files."""
         raise NotImplementedError
 
     @abstractmethod
-    async def get_file_size(self, flow_id: str, file_name: str):
+    async def get_file_size(self, identifier: str, file_name: str) -> int:
+        """Get file size."""
         raise NotImplementedError
 
     @abstractmethod
-    async def delete_file(self, flow_id: str, file_name: str) -> None:
+    async def delete_file(self, identifier: str, file_name: str) -> None:
+        """Delete a file."""
         raise NotImplementedError
 
     async def teardown(self) -> None:

@@ -50,10 +50,10 @@ async def cleanup_orphaned_records() -> None:
                     storage_service: StorageService = get_storage_service()
                     for flow_id in orphaned_flow_ids:
                         try:
-                            files = await storage_service.list_files(str(flow_id))
+                            files = await storage_service.list_files(identifier=str(flow_id))
                             for file in files:
                                 try:
-                                    await storage_service.delete_file(str(flow_id), file)
+                                    await storage_service.delete_file(identifier=str(flow_id), file_name=file)
                                 except Exception as exc:  # noqa: BLE001
                                     logger.error(f"Failed to delete file {file} for flow {flow_id}: {exc!s}")
                             # Delete the flow directory after all files are deleted

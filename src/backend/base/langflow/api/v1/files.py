@@ -65,8 +65,8 @@ async def upload_file(
         file_name = file.filename or hashlib.sha256(file_content).hexdigest()
         full_file_name = f"{timestamp}_{file_name}"
         folder = str(flow.id)
-        await storage_service.save_file(flow_id=folder, file_name=full_file_name, data=file_content)
-        return UploadFileResponse(flow_id=str(flow.id), file_path=f"{folder}/{full_file_name}")
+        await storage_service.save_file(identifier=folder, file_name=full_file_name, data=file_content)
+        return UploadFileResponse(identifier=str(flow.id), file_path=f"{folder}/{full_file_name}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
@@ -89,7 +89,7 @@ async def download_file(
         raise HTTPException(status_code=500, detail=f"Content type not found for extension {extension}")
 
     try:
-        file_content = await storage_service.get_file(flow_id=flow_id_str, file_name=file_name)
+        file_content = await storage_service.get_file(identifier=flow_id_str, file_name=file_name)
         headers = {
             "Content-Disposition": f"attachment; filename={file_name} filename*=UTF-8''{file_name}",
             "Content-Type": "application/octet-stream",
@@ -119,7 +119,7 @@ async def download_image(file_name: str, flow_id: UUID):
         raise HTTPException(status_code=500, detail=f"Content type {content_type} is not an image")
 
     try:
-        file_content = await storage_service.get_file(flow_id=flow_id_str, file_name=file_name)
+        file_content = await storage_service.get_file(identifier=flow_id_str, file_name=file_name)
         return StreamingResponse(BytesIO(file_content), media_type=content_type)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -137,7 +137,7 @@ async def download_profile_picture(
         config_path = Path(config_dir)  # type: ignore[arg-type]
         folder_path = config_path / "profile_pictures" / folder_name
         content_type = build_content_type_from_extension(extension)
-        file_content = await storage_service.get_file(flow_id=folder_path, file_name=file_name)  # type: ignore[arg-type]
+        file_content = await storage_service.get_file(identifier=folder_path, file_name=file_name)  # type: ignore[arg-type]
         return StreamingResponse(BytesIO(file_content), media_type=content_type)
 
     except Exception as e:
@@ -154,8 +154,8 @@ async def list_profile_pictures():
         people_path = config_path / "profile_pictures/People"
         space_path = config_path / "profile_pictures/Space"
 
-        people = await storage_service.list_files(flow_id=people_path)  # type: ignore[arg-type]
-        space = await storage_service.list_files(flow_id=space_path)  # type: ignore[arg-type]
+        people = await storage_service.list_files(identifier=people_path)  # type: ignore[arg-type]
+        space = await storage_service.list_files(identifier=space_path)  # type: ignore[arg-type]
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
@@ -172,7 +172,7 @@ async def list_files(
     storage_service: Annotated[StorageService, Depends(get_storage_service)],
 ):
     try:
-        files = await storage_service.list_files(flow_id=str(flow.id))
+        files = await storage_service.list_files(identifier=str(flow.id))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
@@ -186,7 +186,7 @@ async def delete_file(
     storage_service: Annotated[StorageService, Depends(get_storage_service)],
 ):
     try:
-        await storage_service.delete_file(flow_id=str(flow.id), file_name=file_name)
+        await storage_service.delete_file(identifier=str(flow.id), file_name=file_name)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e)) from e
 
